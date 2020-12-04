@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/nerock/questionapi/domain"
 	"io/ioutil"
-	"log"
 )
 
 type questionRepository struct {
@@ -40,13 +39,11 @@ func (qr *questionRepository) load(source string) error {
 
 	file, err := ioutil.ReadFile(source)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 
 	err = json.Unmarshal(file, &questions)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 
