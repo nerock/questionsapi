@@ -12,21 +12,27 @@ type questionRepository struct {
 	questions []domain.Question
 }
 
-func NewJsonQuestionReader(source string) (questionRepository, error) {
+func NewJsonQuestionReader(source string) (*questionRepository, error) {
 	qr := questionRepository{
 		source:    source,
 		questions: make([]domain.Question, 0),
 	}
 
 	if err := qr.load(source); err != nil {
-		return qr, err
+		return nil, err
 	}
 
-	return qr, nil
+	return &qr, nil
 }
 
 func (qr questionRepository) GetQuestions() []domain.Question {
 	return qr.questions
+}
+
+func (qr *questionRepository) AddQuestion(question domain.Question) error {
+	qr.questions = append(qr.questions, question)
+
+	return nil
 }
 
 func (qr *questionRepository) load(source string) error {
