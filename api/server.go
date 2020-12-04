@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/nerock/questionapi/domain"
 	"github.com/nerock/questionapi/infra"
 )
 
@@ -13,17 +14,17 @@ const (
 )
 
 type server struct {
-	reader infra.QuestionRepository
-	e      *echo.Echo
+	repo infra.QuestionRepository
+	e    *echo.Echo
 }
 
-func NewServer(reader infra.QuestionRepository) server {
+func NewServer(repository infra.QuestionRepository) server {
 	e := echo.New()
 	e.Use(middleware.Logger())
 
 	return server{
-		reader: reader,
-		e:      e,
+		repo: repository,
+		e:    e,
 	}
 }
 
@@ -34,6 +35,7 @@ func (s server) Run() {
 
 func (s server) routes() {
 	s.e.GET("/questions", s.getQuestions)
+	s.e.POST("/questions", s.addQuestion)
 }
 
 func (s server) getQuestions(c echo.Context) error {
@@ -42,5 +44,16 @@ func (s server) getQuestions(c echo.Context) error {
 		return c.JSON(400, errors.New(REQUIRED_LANG))
 	}
 
-	return c.JSON(200, s.reader.GetQuestions())
+	return c.JSON(200, s.repo.GetQuestions())
+}
+
+func (s server) addQuestion(c echo.Context) error {
+	var question domain.Question
+	if err := c.Bind(&question); err != nil {
+		return err
+	}
+
+	s.repo.AddQuestion(question)
+
+	return c.JSON(200, nil)
 }
