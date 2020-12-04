@@ -29,14 +29,14 @@ func (qr questionRepository) GetQuestions() []domain.Question {
 	return qr.questions
 }
 
-func (qr *questionRepository) AddQuestion(question domain.Question) error {
+func (qr *questionRepository) AddQuestion(question domain.Question) (domain.Question, error) {
 	qr.questions = append(qr.questions, question)
 
-	return nil
+	return question, nil
 }
 
 func (qr *questionRepository) load(source string) error {
-	var questions []domain.Question
+	var questions []QuestionVO
 
 	file, err := ioutil.ReadFile(source)
 	if err != nil {
@@ -50,7 +50,7 @@ func (qr *questionRepository) load(source string) error {
 		return err
 	}
 
-	qr.questions = questions
+	qr.questions = MapToQuestions(questions)
 
 	return nil
 }

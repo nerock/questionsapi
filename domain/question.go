@@ -1,7 +1,9 @@
 package domain
 
+import "time"
+
 type Question struct {
-	Text      string    `json:"text"`
-	CreatedAt string    `json:"createdAt"`
-	Choices   [3]Choice `json:"choices"`
+	Text      string
+	CreatedAt time.Time
+	Choices   []Choice
 }

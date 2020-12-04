@@ -15,7 +15,7 @@ const (
 
 type QuestionRepository interface {
 	GetQuestions() []domain.Question
-	AddQuestion(question domain.Question) error
+	AddQuestion(question domain.Question) (domain.Question, error)
 }
 
 func GetRepository(readerType, source string) (QuestionRepository, error) {

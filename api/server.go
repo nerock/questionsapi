@@ -4,13 +4,13 @@ import (
 	"errors"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/nerock/questionapi/domain"
+	"github.com/nerock/questionapi/api/dto"
 	"github.com/nerock/questionapi/infra"
 )
 
 const (
-	REQUIRED_LANG = "valid ISO 639-1 language code is required as parameter with 'lang' key"
-	ISO639_1      = 2
+	RequiredLang = "valid ISO 639-1 language code is required as parameter with 'lang' key"
+	ISO639_1     = 2
 )
 
 type server struct {
@@ -41,19 +41,27 @@ func (s server) routes() {
 func (s server) getQuestions(c echo.Context) error {
 	lang := c.QueryParam("lang")
 	if len(lang) != ISO639_1 {
-		return c.JSON(400, errors.New(REQUIRED_LANG))
+		return c.JSON(400, errors.New(RequiredLang))
 	}
 
 	return c.JSON(200, s.repo.GetQuestions())
 }
 
 func (s server) addQuestion(c echo.Context) error {
-	var question domain.Question
-	if err := c.Bind(&question); err != nil {
+	var questionRequest dto.NewQuestionRequest
+	if err := c.Bind(&questionRequest); err != nil {
 		return err
 	}
 
-	s.repo.AddQuestion(question)
+	question, err := dto.MapToDomainQuestion(questionRequest)
+	if err != nil {
+		return c.JSON(400, err)
+	}
 
-	return c.JSON(200, nil)
+	addedQuestion, err := s.repo.AddQuestion(question)
+	if err != nil {
+		return c.JSON(500, err)
+	}
+
+	return c.JSON(200, dto.MapToQuestionReponse(addedQuestion))
 }
