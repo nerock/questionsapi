@@ -3,6 +3,7 @@ package infra
 import (
 	"errors"
 	"github.com/nerock/questionapi/domain"
+	"github.com/nerock/questionapi/infra/csv"
 	"github.com/nerock/questionapi/infra/json"
 	"strings"
 )
@@ -21,6 +22,8 @@ type QuestionRepository interface {
 func GetRepository(repositoryType, source string) (QuestionRepository, error) {
 	if strings.EqualFold(repositoryType, jsonExt) {
 		return json.NewJsonQuestionRepository(source)
+	} else if strings.EqualFold(repositoryType, csvExt) {
+		return csv.NewCsvQuestionRepository(source)
 	}
 
 	return nil, errors.New(noRepository)
