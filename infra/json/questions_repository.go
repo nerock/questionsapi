@@ -12,7 +12,7 @@ type questionRepository struct {
 	questions []domain.Question
 }
 
-func NewJsonQuestionReader(source string) (*questionRepository, error) {
+func NewJsonQuestionRepository(source string) (*questionRepository, error) {
 	qr := questionRepository{
 		source:    source,
 		questions: make([]domain.Question, 0),

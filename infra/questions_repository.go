@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	JSON      = "json"
-	CSV       = "csv"
-	NO_READER = "wrong read source"
+	jsonExt      = "json"
+	csvExt       = "csv"
+	noRepository = "wrong repository source"
 )
 
 type QuestionRepository interface {
@@ -19,9 +19,9 @@ type QuestionRepository interface {
 }
 
 func GetRepository(readerType, source string) (QuestionRepository, error) {
-	if strings.EqualFold(readerType, JSON) {
-		return json.NewJsonQuestionReader(source)
+	if strings.EqualFold(readerType, jsonExt) {
+		return json.NewJsonQuestionRepository(source)
 	}
 
-	return nil, errors.New(NO_READER)
+	return nil, errors.New(noRepository)
 }
