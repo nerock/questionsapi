@@ -9,17 +9,23 @@ import (
 const (
 	sourceKey     = "source"
 	repositoryKey = "repository"
+	googleKey     = "googleKey"
 )
 
 func main() {
 	readConfig()
+
+	t, err := infra.GetTranslator(viper.GetString(googleKey))
+	if err != nil {
+		panic(err)
+	}
 
 	r, err := infra.GetRepository(viper.GetString(repositoryKey), viper.GetString(sourceKey))
 	if err != nil {
 		panic(err)
 	}
 
-	srv := api.NewServer(r)
+	srv := api.NewServer(r, t)
 	srv.Run()
 }
 

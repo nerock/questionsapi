@@ -14,17 +14,19 @@ const (
 )
 
 type server struct {
-	repo infra.QuestionRepository
-	e    *echo.Echo
+	repo       infra.QuestionRepository
+	translator infra.Translator
+	e          *echo.Echo
 }
 
-func NewServer(repository infra.QuestionRepository) server {
+func NewServer(repository infra.QuestionRepository, translator infra.Translator) server {
 	e := echo.New()
 	e.Use(middleware.Logger())
 
 	return server{
-		repo: repository,
-		e:    e,
+		repo:       repository,
+		translator: translator,
+		e:          e,
 	}
 }
 
@@ -44,7 +46,13 @@ func (s server) getQuestions(c echo.Context) error {
 		return c.JSON(400, errors.New(RequiredLang))
 	}
 
-	return c.JSON(200, dto.MapToQuestionsReponse(s.repo.GetQuestions()))
+	questions := s.repo.GetQuestions()
+	translatedQuestions, err := s.translator.TranslateQuestions(questions, lang)
+	if err != nil {
+		return c.JSON(500, err)
+	}
+
+	return c.JSON(200, dto.MapToQuestionsReponse(translatedQuestions))
 }
 
 func (s server) addQuestion(c echo.Context) error {
