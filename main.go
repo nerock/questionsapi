@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	r, err := infra.GetReader("json", "questions.json")
+	r, err := infra.GetRepository("json", "questions.json")
 	if err != nil {
 		panic(err)
 	}

@@ -13,11 +13,11 @@ const (
 )
 
 type server struct {
-	reader infra.QuestionsReader
+	reader infra.QuestionRepository
 	e      *echo.Echo
 }
 
-func NewServer(reader infra.QuestionsReader) server {
+func NewServer(reader infra.QuestionRepository) server {
 	e := echo.New()
 	e.Use(middleware.Logger())
 

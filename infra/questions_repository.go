@@ -13,13 +13,13 @@ const (
 	NO_READER = "wrong read source"
 )
 
-type QuestionsReader interface {
+type QuestionRepository interface {
 	GetQuestions() []domain.Question
 }
 
-func GetReader(readerType, source string) (QuestionsReader, error) {
+func GetRepository(readerType, source string) (QuestionRepository, error) {
 	if strings.EqualFold(readerType, JSON) {
-		return json.NewJsonQuestionsReader(source)
+		return json.NewJsonQuestionReader(source)
 	}
 
 	return nil, errors.New(NO_READER)

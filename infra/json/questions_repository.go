@@ -7,13 +7,13 @@ import (
 	"log"
 )
 
-type questionsReader struct {
+type questionRepository struct {
 	source    string
 	questions []domain.Question
 }
 
-func NewJsonQuestionsReader(source string) (questionsReader, error) {
-	qr := questionsReader{
+func NewJsonQuestionReader(source string) (questionRepository, error) {
+	qr := questionRepository{
 		source:    source,
 		questions: make([]domain.Question, 0),
 	}
@@ -25,11 +25,11 @@ func NewJsonQuestionsReader(source string) (questionsReader, error) {
 	return qr, nil
 }
 
-func (qr questionsReader) GetQuestions() []domain.Question {
+func (qr questionRepository) GetQuestions() []domain.Question {
 	return qr.questions
 }
 
-func (qr *questionsReader) load(source string) error {
+func (qr *questionRepository) load(source string) error {
 	var questions []domain.Question
 
 	file, err := ioutil.ReadFile(source)
