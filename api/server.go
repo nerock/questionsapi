@@ -44,7 +44,7 @@ func (s server) getQuestions(c echo.Context) error {
 		return c.JSON(400, errors.New(RequiredLang))
 	}
 
-	return c.JSON(200, s.repo.GetQuestions())
+	return c.JSON(200, dto.MapToQuestionsReponse(s.repo.GetQuestions()))
 }
 
 func (s server) addQuestion(c echo.Context) error {
