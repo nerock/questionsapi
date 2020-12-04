@@ -18,8 +18,8 @@ type QuestionRepository interface {
 	AddQuestion(question domain.Question) (domain.Question, error)
 }
 
-func GetRepository(readerType, source string) (QuestionRepository, error) {
-	if strings.EqualFold(readerType, jsonExt) {
+func GetRepository(repositoryType, source string) (QuestionRepository, error) {
+	if strings.EqualFold(repositoryType, jsonExt) {
 		return json.NewJsonQuestionRepository(source)
 	}
 
